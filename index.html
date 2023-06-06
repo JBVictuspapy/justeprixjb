@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Le juste prix 2023 fait par JB</title>
+        <script src="./js/script.js"></script>
+        <link rel="stylesheet" href="animation.css">
+    </head>
+    <style>
+
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0; 
+          background-color: burlywood;
+        }
+      
+        .container {
+          max-width: 500px;
+          margin: 0 auto;
+          padding: 10px;
+          text-align: center;
+          background-color:rgba(27, 137, 51, 0.607);
+        
+        }
+      
+        
+        </style>
+    <body>
+
+        <header>
+
+            <div style="text-align: center;">
+                <img
+                    src="https://th.bing.com/th/id/R.33bf622c9fc94fe334147574233cc407?rik=vOZbdLmLUBsn2A&riu=http%3a%2f%2fi.skyrock.net%2f6959%2f89546959%2fpics%2f3224159605_1_2_mVvkE6Sz.png&ehk=HvvehleDxIs0TApqe5V9DdcFmUIdYEiyi51IBicvwfE%3d&risl=&pid=ImgRaw&r=0"
+                    alt="Logo du juste prix">
+            </div>
+
+        </header>
+
+        <div id="messages"></div>
+        <input type="text" id="guessInput">
+        <button id="guessButton">Valider</button>
+
+        <script>
+        // Liste des lots à gagner
+        var lots = [
+            "500.000€ de préférence en liquide",
+            "Une Girafe",
+            "PC portable d'une valeur de 10.000€ avec une bonne connexion WIFI",
+            "Voiture thermique sans moteur juste les pédales",
+            "Babouche de couleur rose usée du pied gauche",
+            "Babouche de couleur kaki usée du pied droit",
+            "Un chien qui hoche la tête sur la plage arrière de la voiture, au moins il est toujours d'accord avec moi, pas comme ma femme",
+            "Un mug avec la photo de Bécassine",
+            "La photo dédicée de Paul Préboist"
+        ];
+
+        var secretNumber; // Nombre cible
+        var guessCount; // Compteur d'essais
+        var isGameEnded; // Variable pour vérifier si le jeu est terminé
+
+        function startGame() {
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+            guessCount = 0;
+            isGameEnded = false;
+
+            showMessage("Le jeu du Juste Prix commence à vous de jouer. Bonne chance ! Devinez le nombre entre 1 et 100.");
+            
+            // Activer le bouton et l'input
+            document.getElementById("guessButton").disabled = false;
+            document.getElementById("guessInput").disabled = false;
+
+            // Vider l'input et le focus dessus
+            document.getElementById("guessInput").value = "";
+            document.getElementById("guessInput").focus();
+        }
+
+        function showMessage(message) {
+            document.getElementById("messages").innerHTML = message;
+        }
+
+        function validateGuess() {
+            if (isGameEnded) {
+                return;   // Si le jeu est terminé, ne rien faire
+            }
+
+            var guessInput = document.getElementById("guessInput");
+            var guess = parseInt(guessInput.value);
+
+            // Vérifier si l'entrée est un nombre entre 1 et 100
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                showMessage("Veuillez entrer un nombre valide entre 1 et 100.");
+                guessInput.value = "";
+                guessInput.focus();
+                return;
+            }
+
+            guessCount++;
+
+            if (guess === secretNumber) {
+                endGame(true);
+            } else if (guessCount === 7) {
+                endGame(false);
+            } else {
+                var message = guess < secretNumber ? "Le nombre est plus grand !" : "Le nombre est plus petit !";
+                showMessage(message + " Essai #" + guessCount);
+                guessInput.value = "";
+                guessInput.focus();
+            }
+        }
+
+        function endGame(isWon) {
+            isGameEnded = true;
+
+            var message = isWon ? "Bravo ! Vous avez deviné le nombre en " + guessCount + " essais !" : "Désolé vous avez perdu. Le nombre était " + secretNumber + ".";
+            showMessage(message);
+
+            // Désactiver le bouton et l'input
+            document.getElementById("guessButton").disabled = true;
+            document.getElementById("guessInput").disabled = true;
+
+            // Afficher le lot gagné
+            if (isWon) {
+                var randomLot = lots[Math.floor(Math.random() * lots.length)];
+                showMessage("Vous avez gagné : " + randomLot);
+            }
+
+            // Créer le bouton de rechargement de la page
+            var restartButton = document.createElement("button");
+            restartButton.textContent = "Recommencer";
+            restartButton.onclick = function() {
+                location.reload();
+            };
+
+            // Ajouter le bouton de rechargement après les messages
+            document.getElementById("messages").appendChild(restartButton);
+        }
+
+        // Ajouter l'événement de clic sur le bouton
+        document.getElementById("guessButton").onclick = validateGuess;
+
+        // Ajouter l'événement pour valider avec la touche "entrée"
+        document.getElementById("guessInput").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                validateGuess();
+            }
+        });
+
+        // Démarrer le jeu au chargement de la page
+        startGame();
+    </script>
+
+        <div class="container">
+            <h1>Merci pour votre participation...</h1>
+            <h2>A bientôt...</h2>
+        </body>
+    </html>
